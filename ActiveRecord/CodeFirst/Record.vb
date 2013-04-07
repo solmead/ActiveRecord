@@ -25,12 +25,16 @@ Imports System.Collections.Specialized
 Imports System.Data.Entity
 
 Namespace CodeFirst
-
+    ''' <summary>
+    ''' This is inherited by a poco object wanting to support the ActiveRecord Pattern
+    ''' </summary>
+    ''' <typeparam name="TT">The poco type, required so that the ActiveRecord function returns the correct type</typeparam>
+    ''' <remarks></remarks>
     Public MustInherit Class Record(Of TT As Class)
         Inherits IRecord
         Implements IValidatableObject
 
-        Public Shared LastIdSaved As Object
+        'Public Shared LastIdSaved As Object
 
 
 
@@ -200,7 +204,7 @@ Namespace CodeFirst
                 CType(db, Object).HAS.clear()
                 SavePartial(db)
                 db.SaveChanges()
-                LastIdSaved = GetKeyValue(db)
+                'LastIdSaved = GetKeyValue(db)
                 HandleSaveCalledEnd(db)
                 Try
                     Dim Has As List(Of Object) = CType(db, Object).Has
