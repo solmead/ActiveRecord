@@ -187,9 +187,11 @@ Namespace CodeFirst
                         Dim tp As Type = Me.GetType()
                         If db.Entry(Me).State = EntityState.Detached Then
                             db.Set(tp).Attach(Me)
+                            db.Entry(Me).State = EntityState.Modified
                         End If
                     Catch ex As Exception
-                        'Dim a As Integer = 0
+                        Dim a As Integer = 0
+                        Throw
                     End Try
                 End If
             End If
