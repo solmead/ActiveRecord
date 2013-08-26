@@ -50,6 +50,11 @@ Namespace CodeFirst
                         changed = True
                     ElseIf EntityEntry.State = EntityState.Deleted AndAlso Not deletedObjs.Contains(item) Then
                         EntityEntry.State = EntityState.Modified
+                        For Each op In EntityEntry.OriginalValues.PropertyNames
+                            Dim ir = CType(item, IRecord)
+                            ir.SetValue(op, EntityEntry.OriginalValues(op))
+                        Next
+                        ChangeTracker.DetectChanges()
                         item.HandleDeleteBeforeEvent(Me)
                         EntityEntry.State = EntityState.Deleted
                         deletedObjs.Add(item)

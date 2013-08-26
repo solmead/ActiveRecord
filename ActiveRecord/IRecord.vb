@@ -20,6 +20,10 @@
 Imports System.Reflection
 Imports System.Collections.Specialized
 
+''' <summary>
+''' 
+''' </summary>
+''' <remarks></remarks>
 Public MustInherit Class IRecord
 
     'Protected Overridable Function GetKeyValue() As Object
