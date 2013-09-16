@@ -3,22 +3,22 @@ Imports System.Data.Entity
 Imports Microsoft.VisualBasic.CompilerServices
 
 Namespace CodeFirst
-    Public Class TestContext
+    Public Class SimpleContext
         Inherits DbContext
-        Implements IContext(Of TestContext)
+        Implements IContext(Of SimpleContext)
 
         Public Sub New()
             MyBase.New()
-            Extension = New ContextExtension(Of TestContext)(Me)
+            Extension = New ContextExtension(Of SimpleContext)(Me)
         End Sub
         Public Sub New(nameOrConnectionString As String)
             MyBase.New(nameOrConnectionString)
-            Extension = New ContextExtension(Of TestContext)(Me)
+            Extension = New ContextExtension(Of SimpleContext)(Me)
         End Sub
 
-        Public Property Extension As ContextExtension(Of TestContext) Implements IContext(Of TestContext).Extension
+        Public Property Extension As ContextExtension(Of SimpleContext) Implements IContext(Of SimpleContext).Extension
 
-        Public Function MyBaseSaveChanges() As Integer Implements IContext(Of TestContext).MyBaseSaveChanges
+        Public Function MyBaseSaveChanges() As Integer Implements IContext(Of SimpleContext).MyBaseSaveChanges
             Return MyBase.SaveChanges()
         End Function
 

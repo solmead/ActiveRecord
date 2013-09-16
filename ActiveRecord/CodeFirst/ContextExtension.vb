@@ -23,7 +23,7 @@ Namespace CodeFirst
                 Dim item As Object = TryCast(EntityEntry.Entity, IRecord)
                 If item IsNot Nothing Then
                     If (EntityEntry.State = EntityState.Added OrElse EntityEntry.State = EntityState.Modified) AndAlso Not savedObjs.Contains(item) Then
-                        item.HandleSaveBeforeEvent(Me)
+                        item.HandleSaveBeforeEvent(bContext)
                         savedObjs.Add(item)
                         changed = True
                     ElseIf EntityEntry.State = EntityState.Deleted AndAlso Not deletedObjs.Contains(item) Then
@@ -33,7 +33,7 @@ Namespace CodeFirst
                             ir.SetValue(op, EntityEntry.OriginalValues(op))
                         Next
                         bContext.ChangeTracker.DetectChanges()
-                        item.HandleDeleteBeforeEvent(Me)
+                        item.HandleDeleteBeforeEvent(bContext)
                         EntityEntry.State = EntityState.Deleted
                         deletedObjs.Add(item)
                         changed = True
@@ -73,10 +73,10 @@ Namespace CodeFirst
                 Throw New Exception("Save Changes Error, See inner exception - " & SB.ToString, ex)
             End Try
             For Each item In savedObjs
-                item.HandleSaveAfterEvent(Me)
+                item.HandleSaveAfterEvent(bContext)
             Next
             For Each item In deletedObjs
-                item.HandleDeleteAfterEvent(Me)
+                item.HandleDeleteAfterEvent(bContext)
             Next
 
             Return I

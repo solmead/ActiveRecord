@@ -85,7 +85,7 @@
     <Compile Include="CodeFirst\IContext.vb" />
     <Compile Include="CodeFirst\Record.vb" />
     <Compile Include="CodeFirst\Context.vb" />
-    <Compile Include="CodeFirst\TestContext.vb" />
+    <Compile Include="CodeFirst\SimpleContext.vb" />
     <Compile Include="IRecord.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
