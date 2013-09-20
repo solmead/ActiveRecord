@@ -36,8 +36,6 @@ Namespace CodeFirst
 
         'Public Shared LastIdSaved As Object
 
-
-
         Public Sub HandleDeleteBeforeEvent(db As DbContext)
             HandleDeleteBefore(db)
         End Sub
@@ -249,7 +247,7 @@ Namespace CodeFirst
             End If
         End Sub
 
-        
+
         Public Overridable Function ValidateObject(ByVal validationContext As ValidationContext) As IEnumerable(Of ValidationResult)
             Dim vrList As New List(Of ValidationResult)
 
