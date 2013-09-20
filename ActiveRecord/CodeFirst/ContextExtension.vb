@@ -3,6 +3,9 @@ Imports System.Data.Entity
 Imports System.Runtime.InteropServices
 Imports System.CodeDom
 Imports System.Text
+Imports System.Data.Objects
+Imports System.Data.Entity.Infrastructure
+Imports HttpObjectCaching
 
 Namespace CodeFirst
     Public Class ContextExtension(Of TT As {IContext(Of TT), DbContext})
@@ -13,6 +16,30 @@ Namespace CodeFirst
             baseContext.Extension = Me
             bContext = baseContext
         End Sub
+
+        Public ReadOnly Property ObjectContext As ObjectContext
+            Get
+                'return ((IObjectContextAdapter)this).ObjectContext;
+                Return (CType(bContext, IObjectContextAdapter).ObjectContext)
+            End Get
+        End Property
+        
+        Public Shared Sub ClearContext()
+            Dim context As TT
+            Cache.SetItem(CacheArea.Request, "DataContext", context)
+        End Sub
+        Public Shared ReadOnly Property Current As TT
+            Get
+                Dim context = Cache.GetItem(Of TT)(CacheArea.Request, "DataContext")
+                If (Context Is Nothing) Then
+                    Dim tp As Type = GetType(TT)
+                    Context = CType(tp.Assembly.CreateInstance(tp.FullName), TT)
+                    Cache.SetItem(CacheArea.Request, "DataContext", Context)
+                End If
+
+                Return Context
+            End Get
+        End Property
 
 
         Private Function CheckChanges(savedObjs As List(Of Object), deletedObjs As List(Of Object)) As Boolean
