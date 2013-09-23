@@ -63,6 +63,9 @@
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="HttpObjectCaching">
+      <HintPath>..\packages\HttpObjectCaching.4.6.5007.19074\lib\net40\HttpObjectCaching.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.Entity" />
@@ -126,12 +129,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\HttpObjectCaching\HttpObjectCaching\HttpObjectCaching.csproj">
-      <Project>{f892df2d-7a09-481b-b872-738b5af15cb5}</Project>
-      <Name>HttpObjectCaching</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

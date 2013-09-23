@@ -5,6 +5,7 @@ Imports System.CodeDom
 Imports System.Text
 Imports System.Data.Objects
 Imports System.Data.Entity.Infrastructure
+Imports Microsoft.VisualBasic.CompilerServices
 Imports HttpObjectCaching
 
 Namespace CodeFirst
@@ -23,23 +24,36 @@ Namespace CodeFirst
                 Return (CType(bContext, IObjectContextAdapter).ObjectContext)
             End Get
         End Property
-        
+
         Public Shared Sub ClearContext()
             Dim context As TT
             Cache.SetItem(CacheArea.Request, "DataContext", context)
         End Sub
-        Public Shared ReadOnly Property Current As TT
-            Get
-                Dim context = Cache.GetItem(Of TT)(CacheArea.Request, "DataContext")
-                If (Context Is Nothing) Then
-                    Dim tp As Type = GetType(TT)
-                    Context = CType(tp.Assembly.CreateInstance(tp.FullName), TT)
-                    Cache.SetItem(CacheArea.Request, "DataContext", Context)
-                End If
-
-                Return Context
-            End Get
-        End Property
+        Public Shared Function Current() As TT
+            Dim context = Cache.GetItem(Of TT)(CacheArea.Request, "DataContext")
+            If (context Is Nothing) Then
+                Dim tp As Type = GetType(TT)
+                context = CType(tp.Assembly.CreateInstance(tp.FullName), TT)
+                Cache.SetItem(CacheArea.Request, "DataContext", context)
+            End If
+            Return context
+        End Function
+        Public Shared Function Current(createFunction As Func(Of TT)) As TT
+            Dim context = Cache.GetItem(Of TT)(CacheArea.Request, "DataContext")
+            If (context Is Nothing) Then
+                context = createFunction()
+                Cache.SetItem(CacheArea.Request, "DataContext", context)
+            End If
+            Return context
+        End Function
+        Public Shared Function Current(newContext As TT) As TT
+            Dim context = Cache.GetItem(Of TT)(CacheArea.Request, "DataContext")
+            If (context Is Nothing) Then
+                context = newContext
+                Cache.SetItem(CacheArea.Request, "DataContext", context)
+            End If
+            Return context
+        End Function
 
 
         Private Function CheckChanges(savedObjs As List(Of Object), deletedObjs As List(Of Object)) As Boolean
