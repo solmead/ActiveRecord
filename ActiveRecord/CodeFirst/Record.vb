@@ -36,8 +36,6 @@ Namespace CodeFirst
 
         'Public Shared LastIdSaved As Object
 
-
-
         Public Sub HandleDeleteBeforeEvent(db As DbContext)
             HandleDeleteBefore(db)
         End Sub
@@ -203,19 +201,19 @@ Namespace CodeFirst
         ''' <remarks>This should not be used from inside the protected handle functions</remarks>
         Public Sub Save(ByVal db As DbContext)
             If db IsNot Nothing Then
-                CType(db, Object).HAS.clear()
+                'CType(db, Object).HAS.clear()
                 SavePartial(db)
                 db.SaveChanges()
                 'LastIdSaved = GetKeyValue(db)
                 HandleSaveCalledEnd(db)
-                Try
-                    Dim Has As List(Of Object) = CType(db, Object).Has
-                    For Each i In Has
-                        i.HandleAfterSave(db)
-                    Next
-                Catch ex As Exception
+                'Try
+                '    Dim Has As List(Of Object) = CType(db, Object).Has
+                '    For Each i In Has
+                '        i.HandleAfterSave(db)
+                '    Next
+                'Catch ex As Exception
 
-                End Try
+                'End Try
             Else
                 'If Not Me.IsValid Then Throw New Exception("Rule violations prevent saving")
             End If
@@ -249,7 +247,7 @@ Namespace CodeFirst
             End If
         End Sub
 
-        
+
         Public Overridable Function ValidateObject(ByVal validationContext As ValidationContext) As IEnumerable(Of ValidationResult)
             Dim vrList As New List(Of ValidationResult)
 

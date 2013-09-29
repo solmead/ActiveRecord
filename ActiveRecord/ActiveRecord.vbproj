@@ -63,6 +63,9 @@
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="HttpObjectCaching">
+      <HintPath>..\packages\HttpObjectCaching.4.6.5007.19074\lib\net40\HttpObjectCaching.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.Entity" />
@@ -81,8 +84,11 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeFirst\ContextExtension.vb" />
+    <Compile Include="CodeFirst\IContext.vb" />
     <Compile Include="CodeFirst\Record.vb" />
     <Compile Include="CodeFirst\Context.vb" />
+    <Compile Include="CodeFirst\SimpleContext.vb" />
     <Compile Include="IRecord.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

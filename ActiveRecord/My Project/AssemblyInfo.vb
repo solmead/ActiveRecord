@@ -9,11 +9,11 @@ Imports System.Runtime.InteropServices
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("ActiveRecord")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
+<Assembly: AssemblyDescription("ActiveRecord Data Access")> 
+<Assembly: AssemblyCompany("Solmead Productions")> 
 <Assembly: AssemblyProduct("ActiveRecord")> 
 <Assembly: AssemblyCopyright("Copyright ©  2012")> 
-<Assembly: AssemblyTrademark("")> 
+<Assembly: AssemblyTrademark("Solmead Productions")> 
 
 <Assembly: ComVisible(False)>
 
