@@ -1,1 +1,1 @@
-"..\.nuget\nuget\" pack ActiveRecord.vbproj -IncludeReferencedProjects
+"..\.nuget\nuget" pack ActiveRecord.vbproj -IncludeReferencedProjects

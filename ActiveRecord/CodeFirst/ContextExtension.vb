@@ -30,29 +30,16 @@ Namespace CodeFirst
             Cache.SetItem(CacheArea.Request, "DataContext", context)
         End Sub
         Public Shared Function Current() As TT
-            Dim context = Cache.GetItem(Of TT)(CacheArea.Request, "DataContext")
-            If (context Is Nothing) Then
-                Dim tp As Type = GetType(TT)
-                context = CType(tp.Assembly.CreateInstance(tp.FullName), TT)
-                Cache.SetItem(CacheArea.Request, "DataContext", context)
-            End If
-            Return context
+            Return Cache.GetItem(Of TT)(CacheArea.Request, "DataContext", Function()
+                                                                              Dim tp As Type = GetType(TT)
+                                                                              Return CType(tp.Assembly.CreateInstance(tp.FullName), TT)
+                                                                          End Function)
         End Function
         Public Shared Function Current(createFunction As Func(Of TT)) As TT
-            Dim context = Cache.GetItem(Of TT)(CacheArea.Request, "DataContext")
-            If (context Is Nothing) Then
-                context = createFunction()
-                Cache.SetItem(CacheArea.Request, "DataContext", context)
-            End If
-            Return context
+            Return Cache.GetItem(Of TT)(CacheArea.Request, "DataContext", createFunction)
         End Function
         Public Shared Function Current(newContext As TT) As TT
-            Dim context = Cache.GetItem(Of TT)(CacheArea.Request, "DataContext")
-            If (context Is Nothing) Then
-                context = newContext
-                Cache.SetItem(CacheArea.Request, "DataContext", context)
-            End If
-            Return context
+            Return Cache.GetItem(Of TT)(CacheArea.Request, "DataContext", newContext)
         End Function
 
 
