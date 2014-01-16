@@ -66,6 +66,9 @@
     <Reference Include="HttpObjectCaching">
       <HintPath>..\packages\HttpObjectCaching.4.6.5007.19074\lib\net40\HttpObjectCaching.dll</HintPath>
     </Reference>
+    <Reference Include="PocoPropertyData">
+      <HintPath>..\packages\PocoPropertyData.1.0.5126.24963\lib\net40\PocoPropertyData.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.Entity" />

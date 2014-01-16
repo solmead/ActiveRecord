@@ -19,6 +19,7 @@
 ' */
 Imports System.Reflection
 Imports System.Collections.Specialized
+Imports PocoPropertyData.Extensions
 
 ''' <summary>
 ''' 
@@ -43,27 +44,27 @@ Public MustInherit Class IRecord
         Return GetJSON()
     End Function
 
-    Public Function Clone() As IRecord
-        Dim tp As Type = Me.GetType()
-        Dim newItem As IRecord = CType(tp.Assembly.CreateInstance(tp.FullName), IRecord)
-        Me.CopyInto(newItem)
-        Return newItem
-    End Function
-    Public Sub CloneFrom(ByVal oldItem As IRecord)
-        oldItem.CopyInto(Me)
-    End Sub
-    Public Sub CopyInto(ByVal newItem As IRecord)
-        For Each p In Me.GetPropertyNames(onlyBaseTypes:=True, onlyWritable:=True)
-            newItem.SetValue(p, GetValue(p))
-        Next
-    End Sub
-    Public Overridable Function AsCollection() As NameValueCollection
-        Dim f As New NameValueCollection
-        For Each p In Me.GetPropertyNames(onlyBaseTypes:=True)
-            f(p) = Me.GetValue(p)
-        Next
-        Return f
-    End Function
+    'Public Function Clone() As IRecord
+    '    Dim tp As Type = Me.GetType()
+    '    Dim newItem As IRecord = CType(tp.Assembly.CreateInstance(tp.FullName), IRecord)
+    '    Me.CopyInto(newItem)
+    '    Return newItem
+    'End Function
+    'Public Sub CloneFrom(ByVal oldItem As IRecord)
+    '    oldItem.CopyInto(Me)
+    'End Sub
+    'Public Sub CopyInto(ByVal newItem As IRecord)
+    '    For Each p In Me.GetPropertyNames(onlyBaseTypes:=True, onlyWritable:=True)
+    '        newItem.SetValue(p, GetValue(p))
+    '    Next
+    'End Sub
+    'Public Overridable Function AsCollection() As NameValueCollection
+    '    Dim f As New NameValueCollection
+    '    For Each p In Me.GetPropertyNames(onlyBaseTypes:=True)
+    '        f(p) = Me.GetValue(p)
+    '    Next
+    '    Return f
+    'End Function
 
     Public Overrides Function ToString() As String
         Dim sb As New Text.StringBuilder
@@ -78,63 +79,63 @@ Public MustInherit Class IRecord
 
         Return sb.ToString
     End Function
-    Public Overridable Function GetPropertyType(propertyName As String) As Type
-        Dim tp As Type = Me.GetType()
-        Dim prop = tp.GetProperty(propertyName)
+    'Public Overridable Function GetPropertyType(propertyName As String) As Type
+    '    Dim tp As Type = Me.GetType()
+    '    Dim prop = tp.GetProperty(propertyName)
 
-        If (prop IsNot Nothing) Then
-            Return prop.PropertyType
-        End If
-        Return GetType(String)
-    End Function
-    Public Overridable Sub SetValue(propertyName As String, value As Object)
+    '    If (prop IsNot Nothing) Then
+    '        Return prop.PropertyType
+    '    End If
+    '    Return GetType(String)
+    'End Function
+    'Public Overridable Sub SetValue(propertyName As String, value As Object)
 
-        Dim tp As Type = Me.GetType()
-        Dim prop = tp.GetProperty(propertyName)
+    '    Dim tp As Type = Me.GetType()
+    '    Dim prop = tp.GetProperty(propertyName)
 
-        If (prop IsNot Nothing) Then
-            prop.SetValue(Me, value, Nothing)
-        End If
-    End Sub
-    Public Overridable Function GetValue(propertyName As String) As Object
-        Dim retVal As Object = Nothing
-        Dim tp As Type = Me.GetType()
-        Dim prop = tp.GetProperty(propertyName)
-        If (prop IsNot Nothing) Then
-            retVal = prop.GetValue(Me, Nothing)
-        End If
+    '    If (prop IsNot Nothing) Then
+    '        prop.SetValue(Me, value, Nothing)
+    '    End If
+    'End Sub
+    'Public Overridable Function GetValue(propertyName As String) As Object
+    '    Dim retVal As Object = Nothing
+    '    Dim tp As Type = Me.GetType()
+    '    Dim prop = tp.GetProperty(propertyName)
+    '    If (prop IsNot Nothing) Then
+    '        retVal = prop.GetValue(Me, Nothing)
+    '    End If
 
-        Return retVal
-    End Function
-    Public Overridable Function DoesPropertyExist(propertyName As String) As Boolean
-        ' Dim retVal As Object = Nothing
-        Dim tp As Type = Me.GetType()
-        Dim prop = tp.GetProperty(propertyName)
-        Return (prop IsNot Nothing)
-    End Function
-    Public Overridable Function GetPropertyNames(Optional onlyWritable As Boolean = True, Optional onlyBaseTypes As Boolean = False) As List(Of String)
-        Dim tp As Type = Me.GetType()
-        Dim props = tp.GetProperties((BindingFlags.Instance Or BindingFlags.Public Or BindingFlags.FlattenHierarchy)).ToList
+    '    Return retVal
+    'End Function
+    'Public Overridable Function DoesPropertyExist(propertyName As String) As Boolean
+    '    ' Dim retVal As Object = Nothing
+    '    Dim tp As Type = Me.GetType()
+    '    Dim prop = tp.GetProperty(propertyName)
+    '    Return (prop IsNot Nothing)
+    'End Function
+    'Public Overridable Function GetPropertyNames(Optional onlyWritable As Boolean = True, Optional onlyBaseTypes As Boolean = False) As List(Of String)
+    '    Dim tp As Type = Me.GetType()
+    '    Dim props = tp.GetProperties((BindingFlags.Instance Or BindingFlags.Public Or BindingFlags.FlattenHierarchy)).ToList
 
-        If onlyWritable Then
-            props = (From p In props Where p.CanWrite Select p).ToList
-        End If
-        If onlyBaseTypes Then
-            Try
-                props = (From p In props
-                         Where Not (p.PropertyType.FullName.Contains("Record") OrElse
-                         p.PropertyType.FullName.Contains("Set") OrElse
-                         p.PropertyType.FullName.Contains("EntitySet") OrElse
-                         (p.PropertyType.BaseType IsNot Nothing AndAlso
-                          (p.PropertyType.BaseType.FullName.Contains("Record") OrElse
-                         p.PropertyType.BaseType.FullName.Contains("Set") OrElse
-                         p.PropertyType.BaseType.FullName.Contains("EntitySet"))))).ToList
-            Catch ex As Exception
+    '    If onlyWritable Then
+    '        props = (From p In props Where p.CanWrite Select p).ToList
+    '    End If
+    '    If onlyBaseTypes Then
+    '        Try
+    '            props = (From p In props
+    '                     Where Not (p.PropertyType.FullName.Contains("Record") OrElse
+    '                     p.PropertyType.FullName.Contains("Set") OrElse
+    '                     p.PropertyType.FullName.Contains("EntitySet") OrElse
+    '                     (p.PropertyType.BaseType IsNot Nothing AndAlso
+    '                      (p.PropertyType.BaseType.FullName.Contains("Record") OrElse
+    '                     p.PropertyType.BaseType.FullName.Contains("Set") OrElse
+    '                     p.PropertyType.BaseType.FullName.Contains("EntitySet"))))).ToList
+    '        Catch ex As Exception
 
-            End Try
-        End If
+    '        End Try
+    '    End If
 
-        Return (From p In props Select p.Name).ToList
-    End Function
+    '    Return (From p In props Select p.Name).ToList
+    'End Function
 
 End Class

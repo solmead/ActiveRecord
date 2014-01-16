@@ -1,12 +1,10 @@
 ﻿
 Imports System.Data.Entity
-Imports System.Runtime.InteropServices
-Imports System.CodeDom
 Imports System.Text
 Imports System.Data.Objects
 Imports System.Data.Entity.Infrastructure
-Imports Microsoft.VisualBasic.CompilerServices
 Imports HttpObjectCaching
+Imports PocoPropertyData.Extensions
 
 Namespace CodeFirst
     Public Class ContextExtension(Of TT As {IContext(Of TT), DbContext})
@@ -86,19 +84,19 @@ Namespace CodeFirst
                 I = bContext.MyBaseSaveChanges()
                 'Logger.GlobalLog.DebugMessage("SaveChanges: Saved changes")
             Catch ex As Exception
-                Dim SB As New StringBuilder()
+                Dim sb As New StringBuilder()
                 'Logger.GlobalLog.DebugMessage("SaveChanges: Error")
                 For Each e In bContext.GetValidationErrors()
-                    SB.AppendLine(e.Entry.Entity.GetType().ToString & " failed validation")
+                    sb.AppendLine(e.Entry.Entity.GetType().ToString & " failed validation")
                     Debug.WriteLine(e.Entry.Entity.GetType().ToString & " failed validation")
                     For Each se In e.ValidationErrors
-                        SB.AppendLine("     [" & se.PropertyName & "] - [" & se.ErrorMessage & "]")
+                        sb.AppendLine("     [" & se.PropertyName & "] - [" & se.ErrorMessage & "]")
                         Debug.WriteLine("     [" & se.PropertyName & "] - [" & se.ErrorMessage & "]")
                     Next
                 Next
                 'Dim i2 As Integer = 1
 
-                Throw New Exception("Save Changes Error, See inner exception - " & SB.ToString, ex)
+                Throw New Exception("Save Changes Error, See inner exception - " & sb.ToString, ex)
             End Try
             For Each item In savedObjs
                 item.HandleSaveAfterEvent(bContext)
