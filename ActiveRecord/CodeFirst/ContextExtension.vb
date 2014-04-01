@@ -1,9 +1,9 @@
 ﻿
 Imports System.Data.Entity
 Imports System.Text
-Imports System.Data.Objects
 Imports System.Data.Entity.Infrastructure
 Imports HttpObjectCaching
+Imports System.Data.Entity.Core.Objects
 Imports PocoPropertyData.Extensions
 
 Namespace CodeFirst
