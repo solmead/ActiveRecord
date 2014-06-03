@@ -1,12 +1,10 @@
 ﻿
 Imports System.Data.Entity
-Imports System.Runtime.InteropServices
-Imports System.CodeDom
 Imports System.Text
-Imports System.Data.Objects
 Imports System.Data.Entity.Infrastructure
-Imports Microsoft.VisualBasic.CompilerServices
 Imports HttpObjectCaching
+Imports System.Data.Entity.Core.Objects
+Imports PocoPropertyData.Extensions
 
 Namespace CodeFirst
     Public Class ContextExtension(Of TT As {IContext(Of TT), DbContext})
@@ -30,29 +28,16 @@ Namespace CodeFirst
             Cache.SetItem(CacheArea.Request, "DataContext", context)
         End Sub
         Public Shared Function Current() As TT
-            Dim context = Cache.GetItem(Of TT)(CacheArea.Request, "DataContext")
-            If (context Is Nothing) Then
-                Dim tp As Type = GetType(TT)
-                context = CType(tp.Assembly.CreateInstance(tp.FullName), TT)
-                Cache.SetItem(CacheArea.Request, "DataContext", context)
-            End If
-            Return context
+            Return Cache.GetItem(Of TT)(CacheArea.Request, "DataContext", Function()
+                                                                              Dim tp As Type = GetType(TT)
+                                                                              Return CType(tp.Assembly.CreateInstance(tp.FullName), TT)
+                                                                          End Function)
         End Function
         Public Shared Function Current(createFunction As Func(Of TT)) As TT
-            Dim context = Cache.GetItem(Of TT)(CacheArea.Request, "DataContext")
-            If (context Is Nothing) Then
-                context = createFunction()
-                Cache.SetItem(CacheArea.Request, "DataContext", context)
-            End If
-            Return context
+            Return Cache.GetItem(Of TT)(CacheArea.Request, "DataContext", createFunction)
         End Function
         Public Shared Function Current(newContext As TT) As TT
-            Dim context = Cache.GetItem(Of TT)(CacheArea.Request, "DataContext")
-            If (context Is Nothing) Then
-                context = newContext
-                Cache.SetItem(CacheArea.Request, "DataContext", context)
-            End If
-            Return context
+            Return Cache.GetItem(Of TT)(CacheArea.Request, "DataContext", newContext)
         End Function
 
 
@@ -99,19 +84,19 @@ Namespace CodeFirst
                 I = bContext.MyBaseSaveChanges()
                 'Logger.GlobalLog.DebugMessage("SaveChanges: Saved changes")
             Catch ex As Exception
-                Dim SB As New StringBuilder()
+                Dim sb As New StringBuilder()
                 'Logger.GlobalLog.DebugMessage("SaveChanges: Error")
                 For Each e In bContext.GetValidationErrors()
-                    SB.AppendLine(e.Entry.Entity.GetType().ToString & " failed validation")
+                    sb.AppendLine(e.Entry.Entity.GetType().ToString & " failed validation")
                     Debug.WriteLine(e.Entry.Entity.GetType().ToString & " failed validation")
                     For Each se In e.ValidationErrors
-                        SB.AppendLine("     [" & se.PropertyName & "] - [" & se.ErrorMessage & "]")
+                        sb.AppendLine("     [" & se.PropertyName & "] - [" & se.ErrorMessage & "]")
                         Debug.WriteLine("     [" & se.PropertyName & "] - [" & se.ErrorMessage & "]")
                     Next
                 Next
                 'Dim i2 As Integer = 1
 
-                Throw New Exception("Save Changes Error, See inner exception - " & SB.ToString, ex)
+                Throw New Exception("Save Changes Error, See inner exception - " & sb.ToString, ex)
             End Try
             For Each item In savedObjs
                 item.HandleSaveAfterEvent(bContext)

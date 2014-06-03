@@ -78,7 +78,7 @@ Namespace CodeFirst
         End Sub
         Public Function GetKeyName(db As DbContext) As String
             Dim objectContext = CType(db, Entity.Infrastructure.IObjectContextAdapter).ObjectContext
-            Dim objectSet As Objects.ObjectSet(Of TT) = objectContext.CreateObjectSet(Of TT)()
+            Dim objectSet As Core.Objects.ObjectSet(Of TT) = objectContext.CreateObjectSet(Of TT)()
             Dim keyName = (From m In objectSet.EntitySet.ElementType.KeyMembers() Select m.Name).ToList().First()
             Return keyName
         End Function
