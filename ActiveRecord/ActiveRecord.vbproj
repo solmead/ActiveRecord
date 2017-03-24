@@ -61,19 +61,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="HttpObjectCaching, Version=4.6.5239.17634, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\HttpObjectCaching.4.6.5239.17634\lib\net40\HttpObjectCaching.dll</HintPath>
+    <Reference Include="HttpObjectCaching, Version=5.5.6169.1148, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HttpObjectCaching.5.5.6169.1148\lib\net45\HttpObjectCaching.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="PocoPropertyData">
-      <HintPath>..\packages\PocoPropertyData.1.0.5176.22510\lib\net40\PocoPropertyData.dll</HintPath>
+    <Reference Include="PocoPropertyData, Version=1.0.5500.33201, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PocoPropertyData.1.0.5500.33201\lib\net40\PocoPropertyData.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />

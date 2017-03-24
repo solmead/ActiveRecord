@@ -30,6 +30,7 @@ Namespace CodeFirst
     ''' </summary>
     ''' <typeparam name="TT">The poco type, required so that the ActiveRecord function returns the correct type</typeparam>
     ''' <remarks></remarks>
+    <Serializable>
     Public MustInherit Class Record(Of TT As Class)
         Inherits IRecord
         Implements IValidatableObject

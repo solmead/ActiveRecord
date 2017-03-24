@@ -25,6 +25,7 @@ Imports PocoPropertyData.Extensions
 ''' 
 ''' </summary>
 ''' <remarks></remarks>
+<Serializable>
 Public MustInherit Class IRecord
 
     'Protected Overridable Function GetKeyValue() As Object
