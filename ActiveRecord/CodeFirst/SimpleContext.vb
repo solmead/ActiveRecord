@@ -1,11 +1,12 @@
 ﻿
 Imports System.Data.Entity
-Imports Microsoft.VisualBasic.CompilerServices
+Imports ActiveRecord.Base
 
 Namespace CodeFirst
     Public MustInherit Class SimpleContext(Of TT As {SimpleContext(Of TT)})
         Inherits DbContext
         Implements IContext(Of TT)
+        Implements IHandlerContext
 
         Public Sub New()
             MyBase.New()
@@ -25,6 +26,13 @@ Namespace CodeFirst
         Public Overrides Function SaveChanges() As Integer
             Return Extension.SaveChanges()
         End Function
+        
+        public Sub AddActiveHandler(of ItemTT)(handler as IActiveEventHAndler)
+            Extension.AddActiveHandler(of ItemTT)(handler)
+        end Sub
 
+        Public Function GetHandler(entity As Object) As IActiveEventHandler Implements IHandlerContext.GetHandler
+            Return Extension.GetHandler(entity)
+        End Function
     End Class
 End Namespace

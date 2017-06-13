@@ -4,7 +4,9 @@ Imports System.Text
 Imports System.Data.Entity.Infrastructure
 Imports HttpObjectCaching
 Imports System.Data.Entity.Core.Objects
+Imports ActiveRecord.Base
 Imports PocoPropertyData.Extensions
+Imports ActiveRecord.Repository
 
 Namespace CodeFirst
     Public Class ContextExtension(Of TT As {IContext(Of TT), DbContext})
@@ -41,29 +43,39 @@ Namespace CodeFirst
         End Function
 
 
+        public Sub AddActiveHandler(of ItemTT)(handler as IActiveEventHAndler)
+
+        end Sub
+
+        Public Function GetHandler(entity As Object) As IActiveEventHandler
+            
+        End Function
+
         Private Function CheckChanges(savedObjs As List(Of Object), deletedObjs As List(Of Object)) As Boolean
             Dim changed = False
             bContext.ChangeTracker.DetectChanges()
             Dim changedList = bContext.ChangeTracker.Entries().ToList
             For Each EntityEntry In changedList
-                Dim item As Object = TryCast(EntityEntry.Entity, IRecord)
-                If item IsNot Nothing Then
-                    If (EntityEntry.State = EntityState.Added OrElse EntityEntry.State = EntityState.Modified) AndAlso Not savedObjs.Contains(item) Then
-                        item.HandleSaveBeforeEvent(bContext)
-                        savedObjs.Add(item)
-                        changed = True
-                    ElseIf EntityEntry.State = EntityState.Deleted AndAlso Not deletedObjs.Contains(item) Then
-                        EntityEntry.State = EntityState.Modified
-                        For Each op In EntityEntry.OriginalValues.PropertyNames
-                            Dim ir = CType(item, IRecord)
-                            ir.SetValue(op, EntityEntry.OriginalValues(op))
-                        Next
-                        bContext.ChangeTracker.DetectChanges()
-                        item.HandleDeleteBeforeEvent(bContext)
-                        EntityEntry.State = EntityState.Deleted
-                        deletedObjs.Add(item)
-                        changed = True
-                    End If
+                Dim entity = EntityEntry.Entity
+                Dim item As IActiveEventHandler = TryCast(entity, IActiveEventHandler)
+                If item Is Nothing Then
+                    item = GetHandler(entity)
+                End If
+                If (EntityEntry.State = EntityState.Added OrElse EntityEntry.State = EntityState.Modified) AndAlso Not savedObjs.Contains(entity) Then
+                    item.HandleSaveBefore(bContext, entity)
+                    savedObjs.Add(entity)
+                    changed = True
+                ElseIf EntityEntry.State = EntityState.Deleted AndAlso Not deletedObjs.Contains(entity) Then
+                    EntityEntry.State = EntityState.Modified
+                    For Each op In EntityEntry.OriginalValues.PropertyNames
+                        Dim ir = CType(item, IRecord)
+                        ir.SetValue(op, EntityEntry.OriginalValues(op))
+                    Next
+                    bContext.ChangeTracker.DetectChanges()
+                    item.HandleDeleteBefore(bContext, entity)
+                    EntityEntry.State = EntityState.Deleted
+                    deletedObjs.Add(entity)
+                    changed = True
                 End If
             Next
             Return changed
@@ -99,10 +111,18 @@ Namespace CodeFirst
                 Throw New Exception("Save Changes Error, See inner exception - " & sb.ToString, ex)
             End Try
             For Each item In savedObjs
-                item.HandleSaveAfterEvent(bContext)
+                Dim itm As IActiveEventHandler = TryCast(item, IActiveEventHandler)
+                If itm Is Nothing Then
+                    itm = GetHandler(item)
+                End If
+                itm.HandleSaveAfter(bContext, item)
             Next
             For Each item In deletedObjs
-                item.HandleDeleteAfterEvent(bContext)
+                Dim itm As IActiveEventHandler = TryCast(item, IActiveEventHandler)
+                If itm Is Nothing Then
+                    itm = GetHandler(item)
+                End If
+                itm.HandleDeleteAfter(bContext, item)
             Next
 
             Return I

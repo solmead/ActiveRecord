@@ -21,8 +21,8 @@
 Imports System
 Imports System.Reflection
 Imports System.ComponentModel.DataAnnotations
-Imports System.Collections.Specialized
 Imports System.Data.Entity
+Imports ActiveRecord.Base
 
 Namespace CodeFirst
     ''' <summary>
@@ -34,49 +34,24 @@ Namespace CodeFirst
     Public MustInherit Class Record(Of TT As Class)
         Inherits IRecord
         Implements IValidatableObject
+        Implements IActiveEventHandler
 
         'Public Shared LastIdSaved As Object
 
-        Public Sub HandleDeleteBeforeEvent(db As DbContext)
-            HandleDeleteBefore(db)
-        End Sub
-        Public Sub HandleDeleteAfterEvent(db As DbContext)
-            HandleDeleteAfter(db)
-        End Sub
-        Public Sub HandleSaveBeforeEvent(db As DbContext)
-            HandleSaveBefore(db)
-        End Sub
-        Public Sub HandleSaveAfterEvent(db As DbContext)
-            HandleSaveAfter(db)
-        End Sub
+        'Public Sub HandleDeleteBeforeEvent(db As DbContext)
+        '    HandleDeleteBefore(db, me)
+        'End Sub
+        'Public Sub HandleDeleteAfterEvent(db As DbContext)
+        '    HandleDeleteAfter(db, me)
+        'End Sub
+        'Public Sub HandleSaveBeforeEvent(db As DbContext)
+        '    HandleSaveBefore(db, me)
+        'End Sub
+        'Public Sub HandleSaveAfterEvent(db As DbContext)
+        '    HandleSaveAfter(db, me)
+        'End Sub
 
-        Protected Overridable Sub HandleDeleteBefore(db As DbContext)
 
-        End Sub
-        Protected Overridable Sub HandleDeleteAfter(db As DbContext)
-
-        End Sub
-        Protected Overridable Sub HandleSaveBefore(db As DbContext)
-
-        End Sub
-        Protected Overridable Sub HandleSaveAfter(db As DbContext)
-
-        End Sub
-        Protected Overridable Sub HandleDeleteCalledStart(ByVal db As DbContext)
-
-        End Sub
-        Protected Overridable Sub HandleSaveCalledStart(ByVal db As DbContext)
-
-        End Sub
-        Protected Overridable Sub HandleDeleteCalledEnd(ByVal db As DbContext)
-
-        End Sub
-        Protected Overridable Sub HandleSaveCalledEnd(ByVal db As DbContext)
-
-        End Sub
-        Protected Overridable Sub HandleLoadCalledEnd(ByVal db As DbContext)
-
-        End Sub
         Public Function GetKeyName(db As DbContext) As String
             Dim objectContext = CType(db, Entity.Infrastructure.IObjectContextAdapter).ObjectContext
             Dim objectSet As Core.Objects.ObjectSet(Of TT) = objectContext.CreateObjectSet(Of TT)()
@@ -128,7 +103,7 @@ Namespace CodeFirst
                 Dim l2 = CType(db.Set(tp).Find({id}), TT)
 
                 If l2 IsNot Nothing Then
-                    Convert(l2).HandleLoadCalledEnd(db)
+                    'Convert(l2).H(db)
                     Return l2
                 ElseIf Not returnNothing Then
                     Dim o As Object = tp.Assembly.CreateInstance(tp.FullName, True)
@@ -153,7 +128,7 @@ Namespace CodeFirst
         Public Sub DeletePartial(ByVal db As DbContext)
             If db IsNot Nothing Then
                 db.ChangeTracker.DetectChanges()
-                HandleDeleteCalledStart(db)
+                HandleDeleteBefore(db, Me)
                 'Dim tp As Type = Me.GetType()
                 Try
                     If db.Entry(Me).State <> EntityState.Deleted Then
@@ -173,7 +148,7 @@ Namespace CodeFirst
         Public Sub SavePartial(ByVal db As DbContext)
             If db IsNot Nothing Then
                 db.ChangeTracker.DetectChanges()
-                HandleSaveCalledStart(db)
+                HandleSaveBefore(db, Me)
                 Dim id As Object = GetKeyValue(db)
                 If ((TypeOf (id) Is Integer AndAlso id = 0) OrElse (id Is Nothing) OrElse (TypeOf (id) Is Guid AndAlso id = Guid.Empty)) Then
                     Dim tp As Type = Me.GetType()
@@ -206,7 +181,7 @@ Namespace CodeFirst
                 SavePartial(db)
                 db.SaveChanges()
                 'LastIdSaved = GetKeyValue(db)
-                HandleSaveCalledEnd(db)
+                HandleSaveAfter(db, Me)
                 'Try
                 '    Dim Has As List(Of Object) = CType(db, Object).Has
                 '    For Each i In Has
@@ -241,7 +216,7 @@ Namespace CodeFirst
                 'Try
                 DeletePartial(db)
                 db.SaveChanges()
-                HandleDeleteCalledEnd(db)
+                HandleDeleteAfter(db, Me)
                 'Catch ex As Exception
                 '    Dim a As Integer = 1
                 'End Try
@@ -261,6 +236,23 @@ Namespace CodeFirst
         Public Function Validate(ByVal validationContext As ValidationContext) As IEnumerable(Of ValidationResult) Implements IValidatableObject.Validate
             Return ValidateObject(validationContext)
         End Function
+
+        Public Overridable Sub HandleDeleteBefore(db As IHandlerContext, item As Object) Implements IActiveEventHandler.HandleDeleteBefore
+
+        End Sub
+
+        Public Overridable Sub HandleDeleteAfter(db As IHandlerContext, item As Object) Implements IActiveEventHandler.HandleDeleteAfter
+
+        End Sub
+
+        Public Overridable Sub HandleSaveBefore(db As IHandlerContext, item As Object) Implements IActiveEventHandler.HandleSaveBefore
+
+        End Sub
+
+        Public Overridable Sub HandleSaveAfter(db As IHandlerContext, item As Object) Implements IActiveEventHandler.HandleSaveAfter
+
+        End Sub
+
     End Class
 
 
