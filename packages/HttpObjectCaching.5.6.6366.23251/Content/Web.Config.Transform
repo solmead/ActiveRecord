@@ -5,7 +5,7 @@
   <HttpObjectCachingAreas>
     <entries>
       <add area="Other" class=""/>
-      <add area="Permanent" class=""/>
+      <add area="Permanent" class="HttpObjectCaching.Caches.PermanentCache, HttpObjectCaching"/>
       <add area="Distributed" class=""/>
       <add area="Global" class="HttpObjectCaching.Caches.GlobalCache, HttpObjectCaching"/>
       <add area="Cookie" class="HttpObjectCaching.Caches.CookieCache, HttpObjectCaching"/>
@@ -14,5 +14,6 @@
       <!--<add area="Thread" class="HttpObjectCaching.Caches.ThreadCache"/>-->
       <add area="None" class="HttpObjectCaching.Caches.NoCache, HttpObjectCaching"/>
     </entries>
+    <permanent_source class="HttpObjectCaching.Core.Extras.StoreNowhere, HttpObjectCaching"/>
   </HttpObjectCachingAreas>
 </configuration>
