@@ -2,9 +2,9 @@
 Imports System.Data.Entity
 Imports System.Text
 Imports System.Data.Entity.Infrastructure
-Imports HttpObjectCaching
 Imports System.Data.Entity.Core.Objects
-Imports PocoPropertyData.Extensions
+Imports Utilities.Poco
+Imports Utilities.Caching
 
 Namespace CodeFirst
     Public Class ContextExtension(Of TT As {IContext(Of TT), DbContext})
@@ -56,7 +56,11 @@ Namespace CodeFirst
                         EntityEntry.State = EntityState.Modified
                         For Each op In EntityEntry.OriginalValues.PropertyNames
                             Dim ir = CType(item, IRecord)
-                            ir.SetValue(op, EntityEntry.OriginalValues(op))
+                            Try
+                                ir.SetPropOnObj(op, EntityEntry.OriginalValues(op))
+                            Catch ex As Exception
+
+                            End Try
                         Next
                         bContext.ChangeTracker.DetectChanges()
                         item.HandleDeleteBeforeEvent(bContext)

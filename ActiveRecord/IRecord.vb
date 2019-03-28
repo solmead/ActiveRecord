@@ -20,6 +20,7 @@
 Imports System.Reflection
 Imports System.Collections.Specialized
 Imports PocoPropertyData.Extensions
+Imports Utilities.Poco
 
 ''' <summary>
 ''' 

@@ -23,7 +23,7 @@ Imports System.Data.Entity
 Imports System.Text
 
 Namespace CodeFirst
-    <Obsolete("Not used anymore, implement IContext instead", False)>
+    <Obsolete("Not used anymore, implement IContext instead", True)>
     Public Class Context
         Inherits DbContext
         Implements IContext(Of Context)
